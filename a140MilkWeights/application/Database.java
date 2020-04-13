@@ -150,4 +150,18 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Checks if a farm id exists int the database
+	 * 
+	 * @param farmID of the farm to check for
+	 * @return true if farm exists, false if not
+	 */
+	public boolean hasFarm(int farmID) {
+		for (Farm f : allFarms) {
+			if (f.farmID == farmID)
+				return true;
+		}
+		return false;
+	}
+
 }
