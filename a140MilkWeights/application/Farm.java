@@ -1,5 +1,6 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -12,6 +13,8 @@ public class Farm {
 	// private instance variables
 	public int farmID;
 	private HashSet<Purchase> purchases;
+	private ArrayList<String> monthPercent;
+	private int[] monthWeight;
 
 	/**
 	 * Creates a new farm with ID farmID and an empty purchases list
@@ -21,6 +24,40 @@ public class Farm {
 	public Farm(int farmID) {
 		this.farmID = farmID;
 		purchases = new HashSet<Purchase>();
+		monthWeight = new int[12];
+		monthPercent = generateMonthPercent();
+		
+	}
+
+	private ArrayList<String> generateMonthPercent() {
+		ArrayList<String> monthPercent = new ArrayList<String>();
+
+		// fill monthWeight
+		for (Purchase p : purchases) {
+			monthWeight[p.getPurchaseDate().getNumMonth() - 1] += p.getPurchaseWeight();
+		}
+
+		for (int i : monthWeight) {
+			if (getFarmWeight() > 0) {
+				monthPercent.add("" + (i / getFarmWeight()) + "%");
+			} else {
+				monthPercent.add("0%");
+			}
+
+		}
+
+		return monthPercent;
+	}
+
+	/**
+	 * Default no-arg constructor to create a blank farm
+	 */
+	public Farm() {
+		this.farmID = -1;
+		purchases = new HashSet<Purchase>();
+		monthWeight = new int[12];
+		monthPercent = generateMonthPercent();
+		
 	}
 
 	/**
@@ -72,6 +109,7 @@ public class Farm {
 		Purchase toAdd = new Purchase(date, this.farmID, weight);
 		toAdd.print();
 		purchases.add(toAdd);
+		monthPercent = generateMonthPercent();
 	}
 
 	/**
@@ -85,6 +123,10 @@ public class Farm {
 			totalWeight += p.getPurchaseWeight();
 		}
 		return totalWeight;
+	}
+
+	public ArrayList<String> getMonthPercentages() {
+		return monthPercent;
 	}
 
 }
