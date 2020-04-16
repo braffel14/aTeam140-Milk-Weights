@@ -10,6 +10,7 @@ public class Purchase {
 
 	// private instance variables
 	private Date date;
+	private String dateString;
 	private int farmID;
 	private int weight;
 
@@ -24,6 +25,7 @@ public class Purchase {
 		this.date = date;
 		this.farmID = farmID;
 		this.weight = weight;
+		this.dateString = date.toString();
 	}
 
 	/**
@@ -33,6 +35,11 @@ public class Purchase {
 	 */
 	public Date getPurchaseDate() {
 		return this.date;
+	}
+
+	public String getDateString() {
+		dateString = date.toString();
+		return dateString;
 	}
 
 	/**
@@ -49,7 +56,7 @@ public class Purchase {
 	 * 
 	 * @return the weight of milk purchased
 	 */
-	public int getPurchaseWeight() {
+	public int getWeight() {
 		return weight;
 	}
 
@@ -57,8 +64,7 @@ public class Purchase {
 	 * Prints purchase to console
 	 */
 	public void print() {
-		System.out.println("Purchase by farm: " + farmID + " of " + weight + " pounds on " + date.getNumMonth() + "/"
-				+ date.getNumDay() + "/" + date.getNumYear());
+		System.out.println("Purchase by farm: " + farmID + " of " + weight + " pounds on " + date.toString());
 	}
 
 }

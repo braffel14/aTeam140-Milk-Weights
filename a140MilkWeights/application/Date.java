@@ -55,6 +55,13 @@ public class Date implements Comparable<Date> {
 	}
 
 	/**
+	 * Returns a String representation of this date
+	 */
+	public String toString() {
+		return ("" + month + "/" + day + "/" + year);
+	}
+
+	/**
 	 * Allows this date to be compared to another date
 	 * 
 	 * @param od - the Date to compare this date to

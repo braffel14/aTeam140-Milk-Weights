@@ -34,7 +34,7 @@ public class Farm {
 
 		// fill monthWeight
 		for (Purchase p : purchases) {
-			monthWeight[p.getPurchaseDate().getNumMonth() - 1] += p.getPurchaseWeight();
+			monthWeight[p.getPurchaseDate().getNumMonth() - 1] += p.getWeight();
 		}
 
 		for (int i : monthWeight) {
@@ -120,7 +120,7 @@ public class Farm {
 	public int getFarmWeight() {
 		int totalWeight = 0;
 		for (Purchase p : purchases) {
-			totalWeight += p.getPurchaseWeight();
+			totalWeight += p.getWeight();
 		}
 		return totalWeight;
 	}
