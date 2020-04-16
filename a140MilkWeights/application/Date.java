@@ -1,5 +1,7 @@
 package application;
 
+import java.time.LocalDate;
+
 /**
  * Object to represent a Date that a purchase was made on
  * 
@@ -24,7 +26,17 @@ public class Date implements Comparable<Date> {
 		this.year = year;
 		this.month = month;
 		this.day = day;
+	}
 
+	/*
+	 * Creates a new Date object using inforamtion fromm a java LocalDate object
+	 * 
+	 * @param LDate is the LocalDate to get information from
+	 */
+	public Date(LocalDate LDate) {
+		this.year = LDate.getYear();
+		this.month = LDate.getMonthValue();
+		this.day = LDate.getYear();
 	}
 
 	/**

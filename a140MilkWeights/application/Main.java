@@ -246,8 +246,16 @@ public class Main extends Application {
 		// call generateAllPurchasesTable() to create and load the atble view
 		TableView allPurchasesTable = generateAllPurchasesTable(thisFarm);
 
+		// create selection model to delete purchase
+		TableViewSelectionModel<Purchase> purchaseSelection = allPurchasesTable.getSelectionModel();
+		purchaseSelection.setSelectionMode(SelectionMode.SINGLE);
+		ObservableList<Purchase> selectedPurchase = purchaseSelection.getSelectedItems();
+
+		Button removeSelectedPurchase = new Button("Remove Selected Purchase");
+		removeSelectedPurchase.setOnAction(new RemovePurchaseHandler(selectedPurchase, thisFarm));
+
 		// add the label and table to the VBox to hold the allPurchases table
-		allPurchasesBox.getChildren().addAll(allPurchasesLabel, allPurchasesTable);
+		allPurchasesBox.getChildren().addAll(allPurchasesLabel, allPurchasesTable, removeSelectedPurchase);
 
 		// create a vBox to hold the add Purchase UI Elements
 		VBox addPurchaseBox = getAddPurchaseUI();
@@ -256,33 +264,7 @@ public class Main extends Application {
 		Button addPurchaseButton = (Button) addPurchaseBox.getChildren().get(3);
 
 		// event handler to add purchase
-		addPurchaseButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				HBox dateBox = (HBox) addPurchaseBox.getChildren().get(1);
-				DatePicker datePicker = (DatePicker) dateBox.getChildren().get(1);
-
-				HBox weightBox = (HBox) addPurchaseBox.getChildren().get(2);
-				TextField weightField = (TextField) weightBox.getChildren().get(1);
-
-				LocalDate localDate = datePicker.getValue();
-				Date date = convertDate(localDate);
-
-				try {
-					int weight = Integer.parseInt(weightField.getText());
-					// thisFarm.addPurchase(date, weight);
-					// TODO: fix this^
-				} catch (NumberFormatException nfe) {
-					Alert notIntAlert = new Alert(Alert.AlertType.ERROR);
-					notIntAlert.setHeaderText("Weight Must be an Integer");
-					notIntAlert.setContentText("You musgt enter a valid integer for weight.");
-					notIntAlert.show();
-				}
-
-			}
-
-		});
+		addPurchaseButton.setOnAction(new AddPurchaseHandler(addPurchaseBox, thisFarm));
 
 		// add percent by month, all purchase, and add purchase sections to purchasesBox
 		purchasesBox.getChildren().addAll(pByMonthBox, allPurchasesBox, addPurchaseBox);
@@ -293,9 +275,65 @@ public class Main extends Application {
 		return frBody;
 	}
 
-	// convert a java LocalDate to my own Date object
-	protected Date convertDate(LocalDate localDate) {
-		return (new Date(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()));
+	class RemovePurchaseHandler implements EventHandler<ActionEvent> {
+
+		ObservableList<Purchase> selected;
+		Farm thisFarm;
+
+		// constructor
+		RemovePurchaseHandler(ObservableList<Purchase> selected, Farm thisFarm) {
+			this.selected = selected;
+			this.thisFarm = thisFarm;
+		}
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			Purchase selectedP = selected.get(0);
+
+			thisFarm.removePurchase(selectedP);
+
+		}
+	}
+
+	/**
+	 * Create Event Handler to add a new purchase to a farm when Button is pressed
+	 * in MonthlyReport
+	 * 
+	 * @author benjaminraffel
+	 *
+	 */
+	class AddPurchaseHandler implements EventHandler<ActionEvent> {
+
+		VBox addPurchaseBox;
+		Farm thisFarm;
+
+		// constructor
+		AddPurchaseHandler(VBox addPurchaseBox, Farm thisFarm) {
+			this.addPurchaseBox = addPurchaseBox;
+			this.thisFarm = thisFarm;
+		}
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			HBox dateBox = (HBox) addPurchaseBox.getChildren().get(1);
+			DatePicker datePicker = (DatePicker) dateBox.getChildren().get(1);
+
+			HBox weightBox = (HBox) addPurchaseBox.getChildren().get(2);
+			TextField weightField = (TextField) weightBox.getChildren().get(1);
+
+			Date date = new Date(datePicker.getValue());
+
+			try {
+				int weight = Integer.parseInt(weightField.getText());
+				thisFarm.addPurchase(date, weight);
+			} catch (NumberFormatException nfe) {
+				Alert notIntAlert = new Alert(Alert.AlertType.ERROR);
+				notIntAlert.setHeaderText("Weight Must be an Integer");
+				notIntAlert.setContentText("You musgt enter a valid integer for weight.");
+				notIntAlert.show();
+			}
+
+		}
 	}
 
 	/**
@@ -330,9 +368,11 @@ public class Main extends Application {
 
 		// create a button to get he purchase
 		Button addPurchaseButton = new Button("Add");
+		Label disclaimer = new Label("**Must return home and come back for changes \n  to show in table");
+		disclaimer.setFont(new Font(FONT, 8));
 
 		// store all UIelements in main AddPurchase HBox
-		addPurchaseBox.getChildren().addAll(addPurchaseLabel, dateBox, weightBox, addPurchaseButton);
+		addPurchaseBox.getChildren().addAll(addPurchaseLabel, dateBox, weightBox, addPurchaseButton, disclaimer);
 
 		return addPurchaseBox;
 

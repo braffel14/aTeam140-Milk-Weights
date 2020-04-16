@@ -26,7 +26,7 @@ public class Farm {
 		purchases = new HashSet<Purchase>();
 		monthWeight = new int[12];
 		monthPercent = generateMonthPercent();
-		
+
 	}
 
 	private ArrayList<String> generateMonthPercent() {
@@ -57,7 +57,7 @@ public class Farm {
 		purchases = new HashSet<Purchase>();
 		monthWeight = new int[12];
 		monthPercent = generateMonthPercent();
-		
+
 	}
 
 	/**
@@ -110,6 +110,24 @@ public class Farm {
 		toAdd.print();
 		purchases.add(toAdd);
 		monthPercent = generateMonthPercent();
+	}
+
+	/**
+	 * Removes a purchase from this farm. compares weight and purchase date to make
+	 * sure they match
+	 * 
+	 * @param toRem is the purchase to remove
+	 */
+	public void removePurchase(Purchase toRem) {
+		Purchase toRemove = null;
+		for (Purchase p : purchases) {
+			if (p.getWeight() == toRem.getWeight() && p.getPurchaseDate().compareTo(toRem.getPurchaseDate()) == 0) {
+				toRemove = p;
+			}
+		}
+		if (toRemove != null) {
+			purchases.remove(toRemove);
+		}
 	}
 
 	/**
