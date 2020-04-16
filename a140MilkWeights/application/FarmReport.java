@@ -44,7 +44,7 @@ public class FarmReport {
 
 	/**
 	 * Create a VBox with the UI elements required for the user to generate a report
-	 * for a specific farm
+	 * for a specific farm to be returned to the main UI 
 	 * 
 	 * @param primaryStage
 	 * @return VBOX with the UI elements required for the user to generate a report
@@ -52,6 +52,7 @@ public class FarmReport {
 	 */
 	public VBox getFarmReportVBox(Stage primaryStage) {
 		
+		//save primary stage to instance variable
 		this.primaryStage = primaryStage;
 
 		// Create a VBox for the farm report section of the home screen
