@@ -20,3 +20,10 @@
 /FarmReport$2.class
 /FarmReport$AddPurchaseHandler.class
 /FarmReport$RemovePurchaseHandler.class
+/FarmReportGUI$1.class
+/FarmReportGUI$2.class
+/FarmReportGUI$AddPurchaseHandler.class
+/FarmReportGUI$RemovePurchaseHandler.class
+/FarmReportGUI.class
+/Main$ParseFileHandler.class
+/Main$ExportCSVHandler.class

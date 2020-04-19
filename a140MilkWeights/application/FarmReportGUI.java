@@ -25,7 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class FarmReport {
+public class FarmReportGUI {
 	
 	
 	
@@ -35,7 +35,7 @@ public class FarmReport {
 	private final double WINDOW_HEIGHT;
 	private Stage primaryStage;
 	
-	public FarmReport(Database db, String FONT, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
+	public FarmReportGUI(Database db, String FONT, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
 		this.db = db;
 		this.FONT = FONT;
 		this.WINDOW_HEIGHT = WINDOW_HEIGHT;

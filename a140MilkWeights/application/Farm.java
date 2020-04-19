@@ -1,5 +1,6 @@
 package application;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -39,7 +40,9 @@ public class Farm {
 
 		for (int i : monthWeight) {
 			if (getFarmWeight() > 0) {
-				monthPercent.add("" + (i / getFarmWeight()) + "%");
+				double percent = ((double)i/(double)getFarmWeight());
+				DecimalFormat df = new DecimalFormat("##.###");
+				monthPercent.add("" +  df.format(percent) + "%");
 			} else {
 				monthPercent.add("0%");
 			}
