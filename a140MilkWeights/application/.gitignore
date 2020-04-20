@@ -27,3 +27,4 @@
 /FarmReportGUI.class
 /Main$ParseFileHandler.class
 /Main$ExportCSVHandler.class
+/MissingDataException.class

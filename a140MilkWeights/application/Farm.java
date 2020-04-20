@@ -32,17 +32,19 @@ public class Farm {
 
 	private ArrayList<String> generateMonthPercent() {
 		ArrayList<String> monthPercent = new ArrayList<String>();
+		
+		monthWeight = new int[12];
 
 		// fill monthWeight
 		for (Purchase p : purchases) {
 			monthWeight[p.getPurchaseDate().getNumMonth() - 1] += p.getWeight();
 		}
 
-		for (int i : monthWeight) {
+		for (int i = 0; i < 12; i++) {
 			if (getFarmWeight() > 0) {
-				double percent = ((double)i/(double)getFarmWeight());
+				double percent = ((double) monthWeight[i] / (double) getFarmWeight())*100;
 				DecimalFormat df = new DecimalFormat("##.###");
-				monthPercent.add("" +  df.format(percent) + "%");
+				monthPercent.add("" + df.format(percent) + "%");
 			} else {
 				monthPercent.add("0%");
 			}
@@ -147,6 +149,7 @@ public class Farm {
 	}
 
 	public ArrayList<String> getMonthPercentages() {
+		monthPercent = generateMonthPercent();
 		return monthPercent;
 	}
 

@@ -30,8 +30,10 @@ public class Database {
 	 * from
 	 * 
 	 * @param filePath to get initial purchase data
+	 * @throws MissingDataException 
+	 * @throws NumberFormatException 
 	 */
-	public Database(String filePath) {
+	public Database(String filePath) throws NumberFormatException, MissingDataException {
 		allFarms = new HashSet<Farm>();
 		this.filePath = filePath;
 		parseInput(filePath);
@@ -89,7 +91,7 @@ public class Database {
 	 * 
 	 * @param filePath of the file to get purchases from
 	 */
-	public void parseInput(String filePath) {
+	public void parseInput(String filePath) throws NumberFormatException, MissingDataException {
 		try {
 			String line;
 			BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -125,12 +127,19 @@ public class Database {
 			fnfe.printStackTrace();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+
+		}catch(ArrayIndexOutOfBoundsException aiobe) {
+			throw new MissingDataException();
+		}
+		catch (NumberFormatException nfe) {
+			throw nfe;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void importData(File file) {
+	public void importData(File file) throws NumberFormatException, MissingDataException {
 		parseInput(file.getAbsolutePath());
 	}
 

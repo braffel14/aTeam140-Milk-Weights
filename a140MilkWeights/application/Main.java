@@ -52,11 +52,6 @@ public class Main extends Application {
 		// save args example
 		args = this.getParameters().getRaw();
 
-//		for (int m = 1; m <= 12; m++) {
-//			db.parseInput(
-//					"/Users/benjaminraffel/Documents/MilkWeightsProject/a140MilkWeights/csv/small/2019-" + m + ".csv");
-//		}
-
 		// Main layout is Border Pane example (top,left,center,right,bottom)
 		BorderPane root = new BorderPane();
 
@@ -85,9 +80,13 @@ public class Main extends Application {
 		FileChooser importFileChooser = new FileChooser();
 		importFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
 
+		// create label to fill with text if issue is found while parsing data
+		Label parseErrorLabel = new Label();
+		parseErrorLabel.setFont(new Font(FONT, 15));
+
 		// create a button to import data files
 		Button importFileButton = new Button("Import Data From CSV");
-		importFileButton.setOnAction(new ParseFileHandler(db, importFileChooser, primaryStage));
+		importFileButton.setOnAction(new ParseFileHandler(db, importFileChooser, primaryStage, parseErrorLabel));
 
 		// save UI elements for importing data to their HBOX
 		importDataHBox.getChildren().addAll(importFileButton);
@@ -103,7 +102,7 @@ public class Main extends Application {
 		exportDataHBox.getChildren().addAll(exportDataButton);
 
 		// save HBoxes for importing and exporting data to their parent HBoxes
-		dataIOHBox.getChildren().addAll(importDataHBox, exportDataHBox);
+		dataIOHBox.getChildren().addAll(importDataHBox, exportDataHBox, parseErrorLabel);
 
 		root.setTop(topLabelBox);
 		root.setCenter(farmReportVBox);
@@ -128,23 +127,39 @@ public class Main extends Application {
 		Database db;
 		FileChooser fc;
 		Stage primaryStage;
+		Label parseErrorLabel;
 
 		// constructor
-		ParseFileHandler(Database db, FileChooser fc, Stage primaryStage) {
+		ParseFileHandler(Database db, FileChooser fc, Stage primaryStage, Label parseErrorLabel) {
 			this.db = db;
 			this.fc = fc;
 			this.primaryStage = primaryStage;
+			this.parseErrorLabel = parseErrorLabel;
 		}
 
 		@Override
 		public void handle(ActionEvent arg0) {
-			List<File> fileList = fc.showOpenMultipleDialog(primaryStage);
-			if (fileList != null) {
-				for (File file : fileList) {
-					db.importData(file);
+			try {
+				List<File> fileList = fc.showOpenMultipleDialog(primaryStage);
+				if (fileList != null) {
+					for (File file : fileList) {
+						db.importData(file);
+					}
 				}
+				parseErrorLabel.setText("     Import Successful");
+			} catch (NumberFormatException nfe) {
+				parseErrorLabel.setText("");
+				Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
+				noFarmAlert.setHeaderText("Improper CSV Format");
+				noFarmAlert.setContentText("Problem reading data. Check CSV file for proper format and try again.");
+				noFarmAlert.show();
+			} catch (MissingDataException e) {
+				parseErrorLabel.setText("");
+				Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
+				noFarmAlert.setHeaderText("Incomplete Data");
+				noFarmAlert.setContentText("Purchase data in chosen CSV file is incomplete. Check file and try again.");
+				noFarmAlert.show();
 			}
-
 		}
 	}
 
@@ -176,12 +191,6 @@ public class Main extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		/**
-		 * Test database
-		 */
-
-		// Database d = new Database();
-		// d.parseInput("/Users/benjaminraffel/Documents/MilkWeightsProject/a140MilkWeights/csv/small/2019-1.csv");
 
 		launch(args);
 
