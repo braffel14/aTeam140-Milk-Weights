@@ -30,8 +30,8 @@ public class Database {
 	 * from
 	 * 
 	 * @param filePath to get initial purchase data
-	 * @throws MissingDataException 
-	 * @throws NumberFormatException 
+	 * @throws MissingDataException
+	 * @throws NumberFormatException
 	 */
 	public Database(String filePath) throws NumberFormatException, MissingDataException {
 		allFarms = new HashSet<Farm>();
@@ -128,10 +128,9 @@ public class Database {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 
-		}catch(ArrayIndexOutOfBoundsException aiobe) {
+		} catch (ArrayIndexOutOfBoundsException aiobe) {
 			throw new MissingDataException();
-		}
-		catch (NumberFormatException nfe) {
+		} catch (NumberFormatException nfe) {
 			throw nfe;
 
 		} catch (Exception e) {
@@ -236,6 +235,20 @@ public class Database {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Checks the database to see if there were any purchases made int the specified
+	 * year
+	 * 
+	 * @param year to look for purchases
+	 * @return true if there were purchases made in the year, false if not
+	 */
+	public boolean hasYear(int year) {
+		HashSet<Purchase> yearPurchases = getPurchasesInRange(new Date(year, 1, 0), new Date(year, 12, 32));
+		if (yearPurchases.isEmpty())
+			return false;
+		return true;
 	}
 
 }

@@ -70,9 +70,6 @@ public class FarmReportGUI {
 		farmIDField.setPromptText("FarmID");
 		farmIDField.setMaxWidth(75);
 
-		// create a label to appear if the user enters something other than an integer
-		Label farmIDErrorLabel = new Label();
-
 		// create a button to trigger generating the report
 		Button farmReportButton = new Button("Get Farm Report");
 		farmReportButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -90,17 +87,18 @@ public class FarmReportGUI {
 						noFarmAlert.setContentText("Farm " + farmID + " does not exist in this database");
 						noFarmAlert.show();
 					}
-					// if the user enters a proper input, update the error label
-					farmIDErrorLabel.setText("");
 				} catch (NumberFormatException nfe) {
-					// if the user doesn't enter an int, set the error label to let them know
-					farmIDErrorLabel.setText("FarmID must be an integer only");
+					// if the user doesn't enter an int, show alert
+					Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
+					noFarmAlert.setHeaderText("FarmID Format Error");
+					noFarmAlert.setContentText("FarmID must be input as an integer only");
+					noFarmAlert.show();
 				}
 			}
 		});
 
 		// add UI elemetns to HBOX for generating a Farm Report
-		farmIDInput.getChildren().addAll(farmIDField, farmReportButton, farmIDErrorLabel);
+		farmIDInput.getChildren().addAll(farmIDField, farmReportButton);
 
 		// add UI elements to VBox for farm report section of the home screen
 		farmReportvBox.getChildren().addAll(farmReportTitle, farmIDInput);

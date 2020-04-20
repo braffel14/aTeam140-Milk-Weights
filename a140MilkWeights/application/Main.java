@@ -70,6 +70,14 @@ public class Main extends Application {
 		VBox farmReportVBox = farmReportUI.getFarmReportVBox(primaryStage);
 		farmReportVBox.setAlignment(Pos.CENTER);
 
+		// create AnnualReport object to use on home page as well as generate and show a
+		// Annual Report window
+		AnnualReportGUI annualReportUI = new AnnualReportGUI(db, FONT, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+		// create a VBx for the UI elements for generating a farm report
+		VBox annualReportVBox = annualReportUI.getAnnualReportVBox(primaryStage);
+		annualReportVBox.setAlignment(Pos.CENTER);
+
 		// Creat a HBox for the UI elemetns for importing and saving data files
 		HBox dataIOHBox = new HBox();
 
@@ -105,6 +113,7 @@ public class Main extends Application {
 		dataIOHBox.getChildren().addAll(importDataHBox, exportDataHBox, parseErrorLabel);
 
 		root.setTop(topLabelBox);
+		root.setLeft(annualReportVBox);
 		root.setCenter(farmReportVBox);
 		root.setBottom(dataIOHBox);
 		Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
