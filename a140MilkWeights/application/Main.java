@@ -62,6 +62,9 @@ public class Main extends Application {
 		topLabel.setFont(new Font(FONT, 36));
 		topLabelBox.getChildren().addAll(topLabel);
 
+		// Create a VBox to Hold UI elements for generating reports
+		VBox allReportsVBox = new VBox();
+
 		// create FarmReport object to use on home page as well as generate and show a
 		// farm Report window
 		FarmReportGUI farmReportUI = new FarmReportGUI(db, FONT, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -106,6 +109,13 @@ public class Main extends Application {
 		Button exportDataButton = new Button("Export Data to CSV");
 		exportDataButton.setOnAction(new ExportCSVHandler(db, primaryStage));
 
+		// create vbox with empty label to space out annual report and farm report boxes
+		VBox spacerBox = new VBox();
+		spacerBox.getChildren().addAll(new Label(""));
+		// add VBoxes to allReportsVBox
+		allReportsVBox.getChildren().addAll(annualReportVBox, spacerBox, farmReportVBox);
+		allReportsVBox.setAlignment(Pos.CENTER);
+
 		// save UI elemtns for exporting data to exportDataHBox
 		exportDataHBox.getChildren().addAll(exportDataButton);
 
@@ -113,8 +123,7 @@ public class Main extends Application {
 		dataIOHBox.getChildren().addAll(importDataHBox, exportDataHBox, parseErrorLabel);
 
 		root.setTop(topLabelBox);
-		root.setLeft(annualReportVBox);
-		root.setCenter(farmReportVBox);
+		root.setCenter(allReportsVBox);
 		root.setBottom(dataIOHBox);
 		Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
 

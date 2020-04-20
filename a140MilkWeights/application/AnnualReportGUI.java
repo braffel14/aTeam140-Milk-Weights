@@ -38,11 +38,11 @@ public class AnnualReportGUI {
 
 	/**
 	 * Create a VBox with the UI elements required for the user to generate a report
-	 * for a specific farm to be returned to the main UI
+	 * for a specific year to be returned to the main UI
 	 * 
 	 * @param primaryStage
 	 * @return VBOX with the UI elements required for the user to generate a report
-	 *         for a specific farm
+	 *         for a specific year
 	 */
 	public VBox getAnnualReportVBox(Stage primaryStage) {
 
@@ -65,7 +65,7 @@ public class AnnualReportGUI {
 		yearField.setMaxWidth(75);
 
 		// create a button to trigger generating the report
-		Button annualReportButton = new Button("Get Year Report");
+		Button annualReportButton = new Button("Generate Annual Report");
 		annualReportButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -91,6 +91,7 @@ public class AnnualReportGUI {
 			}
 		});
 
+
 		// add UI elemetns to HBOX for generating a Farm Report
 		yearInput.getChildren().addAll(yearField, annualReportButton);
 
@@ -100,12 +101,12 @@ public class AnnualReportGUI {
 		return annualReportvBox;
 
 	}
-	
+
 	/**
-	 * Switches the scene to the farmReport and generates the report
+	 * Switches the scene to the yearReport and generates the report
 	 * 
 	 * @param db           is the database
-	 * @param farmID       is the ID of the farm to generate a report for
+	 * @param year         is the year to generate an annual report for
 	 * @param primaryStage the primaryStage of the UI
 	 */
 	private void generateAnnualReport(Database db, int year, Stage primaryStage) {
@@ -151,7 +152,7 @@ public class AnnualReportGUI {
 		// update primaryStage's scene for this view
 		primaryStage.setScene(new Scene(annualReportBP, WINDOW_WIDTH, WINDOW_HEIGHT));
 	}
-	
+
 	/**
 	 * Generates a VBox to use as the body of the farmReport screen. This method
 	 * also generates the report from the database

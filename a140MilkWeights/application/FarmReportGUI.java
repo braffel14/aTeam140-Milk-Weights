@@ -71,7 +71,7 @@ public class FarmReportGUI {
 		farmIDField.setMaxWidth(75);
 
 		// create a button to trigger generating the report
-		Button farmReportButton = new Button("Get Farm Report");
+		Button farmReportButton = new Button("Generate Farm Report");
 		farmReportButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
