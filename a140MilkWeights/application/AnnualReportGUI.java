@@ -1,9 +1,11 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import application.FarmReportGUI.AddPurchaseHandler;
 import application.FarmReportGUI.RemovePurchaseHandler;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,9 +15,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableView.TableViewSelectionModel;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -91,7 +95,6 @@ public class AnnualReportGUI {
 			}
 		});
 
-
 		// add UI elemetns to HBOX for generating a Farm Report
 		yearInput.getChildren().addAll(yearField, annualReportButton);
 
@@ -165,73 +168,87 @@ public class AnnualReportGUI {
 		// create VBox to return as the body of the farm Report
 		VBox frBody = new VBox();
 
-//		// get farm info from database
-//		ArrayList<Farm> allFarms = new ArrayList<Farm>(db.allFarms);
-//		Farm thisFarm = new Farm();
-//		for (Farm f : allFarms) {
-//			if (f.farmID == farmID) {
-//				thisFarm = f;
-//			}
-//		}
-//
-//		// create HBox and label to display total milk weight
-//		HBox totalMilkBox = new HBox();
-//		Label totalMilkLabel = new Label("Total Milk Weight: " + thisFarm.getFarmWeight() + " pounds purchased");
-//		totalMilkLabel.setFont(new Font(FONT, 24));
-//		totalMilkBox.getChildren().addAll(totalMilkLabel);
-//
-//		// create new Hbox to hold percent by month, all purchases, and add purchase
-//		// section
-//		HBox purchasesBox = new HBox();
-//
-//		// crate VBox to hold percent by month
-//		VBox pByMonthBox = new VBox();
-//
-//		Label pByMonthLabel = new Label("Percent Weight by Month");
-//		pByMonthLabel.setAlignment(Pos.CENTER);
-//		pByMonthLabel.setFont(new Font(FONT, 15));
-//
-//		TableView pByMonthTable = generatePByMonthTable(thisFarm.getFarmWeight(), thisFarm);
-//
-//		pByMonthBox.getChildren().addAll(pByMonthLabel, pByMonthTable);
-//
-//		// crate VBox to hold all purchases table
-//		VBox allPurchasesBox = new VBox();
-//
-//		// create a label to go above the all purchases table
-//		Label allPurchasesLabel = new Label("All Purchases");
-//		allPurchasesLabel.setAlignment(Pos.CENTER);
-//		allPurchasesLabel.setFont(new Font(FONT, 15));
-//
-//		// call generateAllPurchasesTable() to create and load the atble view
-//		TableView allPurchasesTable = generateAllPurchasesTable(thisFarm);
-//
-//		// create selection model to delete purchase
-//		TableViewSelectionModel<Purchase> purchaseSelection = allPurchasesTable.getSelectionModel();
-//		purchaseSelection.setSelectionMode(SelectionMode.SINGLE);
-//		ObservableList<Purchase> selectedPurchase = purchaseSelection.getSelectedItems();
-//
-//		Button removeSelectedPurchase = new Button("Remove Selected Purchase");
-//		removeSelectedPurchase.setOnAction(new RemovePurchaseHandler(selectedPurchase, thisFarm));
-//
-//		// add the label and table to the VBox to hold the allPurchases table
-//		allPurchasesBox.getChildren().addAll(allPurchasesLabel, allPurchasesTable, removeSelectedPurchase);
-//
-//		// create a vBox to hold the add Purchase UI Elements
-//		VBox addPurchaseBox = getAddPurchaseUI();
-//
-//		// get the button to add purchase out of the VBox
-//		Button addPurchaseButton = (Button) addPurchaseBox.getChildren().get(3);
-//
-//		// event handler to add purchase
-//		addPurchaseButton.setOnAction(new AddPurchaseHandler(addPurchaseBox, thisFarm));
-//
-//		// add percent by month, all purchase, and add purchase sections to purchasesBox
-//		purchasesBox.getChildren().addAll(pByMonthBox, allPurchasesBox, addPurchaseBox);
-//
-//		// add Hboxes to main Vbox
-//		frBody.getChildren().addAll(totalMilkBox, purchasesBox);
+		// get farm info from database
+		ArrayList<Farm> allFarms = new ArrayList<Farm>(db.allFarms);
+
+		// get purchases weight from this year
+		HashSet<Purchase> purchases = db.getPurchasesInRange(new Date(year, 1, 0), new Date(year, 12, 32));
+
+		// get total milk weight this year
+		int weight = 0;
+		for (Purchase p : purchases) {
+			weight += p.getWeight();
+		}
+
+		// create HBox and label to display total milk weight
+		HBox totalMilkBox = new HBox();
+		Label totalMilkLabel = new Label("Total Milk Weight: " + weight + " pounds purchased");
+		totalMilkLabel.setFont(new Font(FONT, 24));
+		totalMilkBox.getChildren().addAll(totalMilkLabel);
+
+		// create new Hbox to hold percent by farm
+		HBox purchasesBox = new HBox();
+
+		// crate VBox to hold percent by month
+		VBox pByFarmBox = new VBox();
+
+		Label pByFarmLabel = new Label("Percent Weight by Farm");
+		pByFarmLabel.setAlignment(Pos.CENTER);
+		pByFarmLabel.setFont(new Font(FONT, 15));
+
+		TableView pByFarmTable = generatePByFarmTable(weight, allFarms, year);
+
+		pByFarmBox.getChildren().addAll(pByFarmLabel, pByFarmTable);
+
+		// add percent by month, all purchase, and add purchase sections to purchasesBox
+		purchasesBox.getChildren().addAll(pByFarmBox);
+
+		// add Hboxes to main Vbox
+		frBody.getChildren().addAll(totalMilkBox, purchasesBox);
 
 		return frBody;
+	}
+
+	private TableView generatePByFarmTable(int weight, ArrayList<Farm> allFarms, int year) {
+		ArrayList<farmPercent> list = new ArrayList<farmPercent>();
+
+		for (Farm f : allFarms) {
+			list.add(new farmPercent(f, weight, year));
+		}
+
+		ObservableList<farmPercent> data = FXCollections.observableList(list);
+
+		TableView<farmPercent> table = new TableView<farmPercent>();
+
+		table.getItems().addAll(data);
+		table.getColumns().addAll(getFarmIDColumn(), getFarmPercentColumn(), getFarmWeightColumn());
+
+		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+		return table;
+	}
+
+	// Returns FarmID column for annual report Table
+	public static TableColumn<farmPercent, String> getFarmIDColumn() {
+		TableColumn<farmPercent, String> IDCol = new TableColumn<>("FarmID");
+		PropertyValueFactory<farmPercent, String> IDCellValueFactory = new PropertyValueFactory<>("ID");
+		IDCol.setCellValueFactory(IDCellValueFactory);
+		return IDCol;
+	}
+
+	// Returns percent column for annual report Table
+	public static TableColumn<farmPercent, String> getFarmPercentColumn() {
+		TableColumn<farmPercent, String> PercentCol = new TableColumn<>("Percent Sold");
+		PropertyValueFactory<farmPercent, String> PercentCellValueFactory = new PropertyValueFactory<>("Percent");
+		PercentCol.setCellValueFactory(PercentCellValueFactory);
+		return PercentCol;
+	}
+
+	// Returns weight column for annual report Table
+	public static TableColumn<farmPercent, String> getFarmWeightColumn() {
+		TableColumn<farmPercent, String> weightCol = new TableColumn<>("Weight Sold");
+		PropertyValueFactory<farmPercent, String> weightCellValueFactory = new PropertyValueFactory<>("farmWeight");
+		weightCol.setCellValueFactory(weightCellValueFactory);
+		return weightCol;
 	}
 }
