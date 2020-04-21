@@ -229,9 +229,9 @@ public class AnnualReportGUI {
 	}
 
 	// Returns FarmID column for annual report Table
-	public static TableColumn<farmPercent, String> getFarmIDColumn() {
-		TableColumn<farmPercent, String> IDCol = new TableColumn<>("FarmID");
-		PropertyValueFactory<farmPercent, String> IDCellValueFactory = new PropertyValueFactory<>("ID");
+	public static TableColumn<farmPercent, Integer> getFarmIDColumn() {
+		TableColumn<farmPercent, Integer> IDCol = new TableColumn<>("FarmID");
+		PropertyValueFactory<farmPercent, Integer> IDCellValueFactory = new PropertyValueFactory<>("ID");
 		IDCol.setCellValueFactory(IDCellValueFactory);
 		return IDCol;
 	}

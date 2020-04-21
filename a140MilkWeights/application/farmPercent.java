@@ -21,8 +21,9 @@ public class farmPercent {
 		Percent = "" + df.format(dpercent) + "%";
 	}
 
-	public String getID() {
-		return Integer.valueOf(ID).toString();
+	public Integer getID() {
+		// return Integer.valueOf(ID).toString();
+		return Integer.valueOf(ID);
 	}
 
 	public String getPercent() {
