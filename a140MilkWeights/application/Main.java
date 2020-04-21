@@ -77,8 +77,15 @@ public class Main extends Application {
 		// Annual Report window
 		AnnualReportGUI annualReportUI = new AnnualReportGUI(db, FONT, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		// create a VBx for the UI elements for generating a farm report
+		// create a VBx for the UI elements for generating an annual report
 		VBox annualReportVBox = annualReportUI.getAnnualReportVBox(primaryStage);
+		annualReportVBox.setAlignment(Pos.CENTER);
+
+		// Create DateRangeReport object to use on home page as well as generate and
+		// show a date range report window
+		DateRangeReportGUI rangeReportUI = new DateRangeReportGUI(db, FONT, WINDOW_WIDTH, WINDOW_HEIGHT);
+		// create a VBx for the UI elements for generating a date range report
+		VBox rangeReportBox = rangeReportUI.getRangeReportVBox(primaryStage);
 		annualReportVBox.setAlignment(Pos.CENTER);
 
 		// Creat a HBox for the UI elemetns for importing and saving data files
@@ -112,8 +119,10 @@ public class Main extends Application {
 		// create vbox with empty label to space out annual report and farm report boxes
 		VBox spacerBox = new VBox();
 		spacerBox.getChildren().addAll(new Label(""));
+		VBox spacerBox2 = new VBox();
+		spacerBox2.getChildren().addAll(new Label(""));
 		// add VBoxes to allReportsVBox
-		allReportsVBox.getChildren().addAll(annualReportVBox, spacerBox, farmReportVBox);
+		allReportsVBox.getChildren().addAll(annualReportVBox, spacerBox, farmReportVBox, spacerBox2, rangeReportBox);
 		allReportsVBox.setAlignment(Pos.CENTER);
 
 		// save UI elemtns for exporting data to exportDataHBox

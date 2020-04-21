@@ -36,7 +36,7 @@ public class Date implements Comparable<Date> {
 	public Date(LocalDate LDate) {
 		this.year = LDate.getYear();
 		this.month = LDate.getMonthValue();
-		this.day = LDate.getYear();
+		this.day = LDate.getDayOfMonth();
 	}
 
 	/**

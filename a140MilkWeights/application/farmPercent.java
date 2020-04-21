@@ -21,6 +21,18 @@ public class farmPercent {
 		Percent = "" + df.format(dpercent) + "%";
 	}
 
+	public farmPercent(Farm farm, int totalWeight, Date start, Date end) {
+		this.ID = farm.farmID;
+		HashSet<Purchase> purchases = farm.getPurchasesInDate(start, end);
+		farmWeight = 0;
+		for (Purchase p : purchases) {
+			farmWeight += p.getWeight();
+		}
+		double dpercent = ((double) farmWeight / (double) totalWeight) * 100;
+		DecimalFormat df = new DecimalFormat("##.###");
+		Percent = "" + df.format(dpercent) + "%";
+	}
+
 	public Integer getID() {
 		// return Integer.valueOf(ID).toString();
 		return Integer.valueOf(ID);

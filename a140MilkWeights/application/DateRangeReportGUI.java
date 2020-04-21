@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -26,14 +27,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class AnnualReportGUI {
+public class DateRangeReportGUI {
 	private final Database db;
 	private final String FONT;
 	private final double WINDOW_WIDTH;
 	private final double WINDOW_HEIGHT;
 	private Stage primaryStage;
 
-	public AnnualReportGUI(Database db, String FONT, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
+	public DateRangeReportGUI(Database db, String FONT, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
 		this.db = db;
 		this.FONT = FONT;
 		this.WINDOW_HEIGHT = WINDOW_HEIGHT;
@@ -48,61 +49,98 @@ public class AnnualReportGUI {
 	 * @return VBOX with the UI elements required for the user to generate a report
 	 *         for a specific year
 	 */
-	public VBox getAnnualReportVBox(Stage primaryStage) {
+	public VBox getRangeReportVBox(Stage primaryStage) {
 
 		// save primary stage to instance variable
 		this.primaryStage = primaryStage;
 
 		// Create a VBox for the farm report section of the home screen
-		VBox annualReportvBox = new VBox();
+		VBox rangeReportvBox = new VBox();
+		rangeReportvBox.setAlignment(Pos.CENTER);
 
 		// create a label for this section of the home screen
-		Label annualReportTitle = new Label("Generate Annual Report");
+		Label rangeReportTitle = new Label("Generate Range Report");
+		rangeReportTitle.setAlignment(Pos.CENTER);
 
 		// create an HBox for the input required to generate the annual report
-		HBox yearInput = new HBox();
-		yearInput.setAlignment(Pos.CENTER);
+		HBox dateInput = new HBox();
+		dateInput.setAlignment(Pos.CENTER);
 
-		// create a textField for the user to input theyear
-		TextField yearField = new TextField();
-		yearField.setPromptText("Year");
-		yearField.setMaxWidth(75);
+		VBox startBox = new VBox();
+		Label startLabel = new Label("Start date:");
+		DatePicker startDate = new DatePicker();
+		startDate.setMaxWidth(110);
+		startBox.getChildren().addAll(startLabel, startDate);
 
+		VBox endBox = new VBox();
+		Label endLabel = new Label("End date:");
+		DatePicker endDate = new DatePicker();
+		endDate.setMaxWidth(110);
+		endBox.getChildren().addAll(endLabel, endDate);
+
+		VBox dateButtonBox = new VBox();
+		Label blankDateButtonLabel = new Label("");
 		// create a button to trigger generating the report
-		Button annualReportButton = new Button("Generate Annual Report");
-		annualReportButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				try {
-					// get the farmID from the textField
-					int year = Integer.parseInt(yearField.getText());
-					if (db.hasYear(year)) {
-						// call method to switch the scene and generate the report
-						generateAnnualReport(db, year, primaryStage);
-					} else {
-						Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
-						noFarmAlert.setHeaderText("Year Not Found");
-						noFarmAlert.setContentText("There is data for " + year + " in this database.");
-						noFarmAlert.show();
-					}
-				} catch (NumberFormatException nfe) {
-					// if the user doesn't enter an int, show alert
-					Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
-					noFarmAlert.setHeaderText("Year Format Error");
-					noFarmAlert.setContentText("Year must be input as an integer only");
-					noFarmAlert.show();
-				}
-			}
-		});
+		Button rangeReportButton = new Button("Generate Date Range Report");
 
+		dateButtonBox.getChildren().addAll(blankDateButtonLabel, rangeReportButton);
+
+		HBox datePickers = new HBox();
+		datePickers.getChildren().addAll(startBox, endBox, dateButtonBox);
+		rangeReportButton.setOnAction(new GetRangeHandler(datePickers));
 		// add UI elemetns to HBOX for generating a Farm Report
-		yearInput.getChildren().addAll(yearField, annualReportButton);
+		dateInput.getChildren().addAll(datePickers, rangeReportButton);
 
 		// add UI elements to VBox for farm report section of the home screen
-		annualReportvBox.getChildren().addAll(annualReportTitle, yearInput);
+		rangeReportvBox.getChildren().addAll(rangeReportTitle, dateInput);
 
-		return annualReportvBox;
+		return rangeReportvBox;
 
+	}
+
+	/**
+	 * Create Event Handler to add a new purchase to a farm when Button is pressed
+	 * in MonthlyReport
+	 * 
+	 * @author benjaminraffel
+	 *
+	 */
+	class GetRangeHandler implements EventHandler<ActionEvent> {
+
+		HBox datePickers;
+
+		// constructor
+		GetRangeHandler(HBox datePickers) {
+			this.datePickers = datePickers;
+		}
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			VBox startBox = (VBox) datePickers.getChildren().get(0);
+			DatePicker startPicker = (DatePicker) startBox.getChildren().get(1);
+
+			VBox endBox = (VBox) datePickers.getChildren().get(1);
+			DatePicker endPicker = (DatePicker) endBox.getChildren().get(1);
+
+			Date startDate = new Date(startPicker.getValue());
+			Date endDate = new Date(endPicker.getValue());
+
+			HashSet<Purchase> purchases = db.getPurchasesInRange(startDate, endDate);
+
+			try {
+				if (purchases == null || purchases.isEmpty()) {
+					throw new InvalidDateException();
+				}
+				generateRangeReport(db, startDate, endDate, primaryStage);
+			} catch (InvalidDateException ide) {
+				Alert notIntAlert = new Alert(Alert.AlertType.ERROR);
+				notIntAlert.setHeaderText("No Data for Dates");
+				notIntAlert.setContentText("There were no purchases made between " + startDate.toString() + " and "
+						+ endDate.toString() + ".");
+				notIntAlert.show();
+			}
+
+		}
 	}
 
 	/**
@@ -112,16 +150,16 @@ public class AnnualReportGUI {
 	 * @param year         is the year to generate an annual report for
 	 * @param primaryStage the primaryStage of the UI
 	 */
-	private void generateAnnualReport(Database db, int year, Stage primaryStage) {
+	private void generateRangeReport(Database db, Date start, Date end, Stage primaryStage) {
 		// save primary stage attributes to go back
 		Scene homeScene = primaryStage.getScene();
 		String homeTitle = primaryStage.getTitle();
 
 		// update title
-		primaryStage.setTitle("Year " + year + " Report");
+		primaryStage.setTitle(start.toString() + " to " + end.toString() + " Report");
 
 		// create a new borderpane for this "new" scene
-		BorderPane annualReportBP = new BorderPane();
+		BorderPane rangeReportBP = new BorderPane();
 
 		// create an Hbox to hold the home button and the top text
 		HBox topHBox = new HBox();
@@ -141,7 +179,7 @@ public class AnnualReportGUI {
 		});
 
 		// create a label for the top text
-		Label reportLabel = new Label("Year " + year + " Report");
+		Label reportLabel = new Label(start.toString() + " to " + end.toString() + " Report");
 		reportLabel.setFont(new Font(FONT, 36));
 		reportLabel.setAlignment(Pos.CENTER);
 
@@ -149,11 +187,11 @@ public class AnnualReportGUI {
 		topHBox.getChildren().addAll(homeButton, reportLabel);
 
 		// add UI elements to border pane
-		annualReportBP.setTop(topHBox);
-		annualReportBP.setCenter(annualReportBody(db, year));
+		rangeReportBP.setTop(topHBox);
+		rangeReportBP.setCenter(rangeReportBody(db, start, end));
 
 		// update primaryStage's scene for this view
-		primaryStage.setScene(new Scene(annualReportBP, WINDOW_WIDTH, WINDOW_HEIGHT));
+		primaryStage.setScene(new Scene(rangeReportBP, WINDOW_WIDTH, WINDOW_HEIGHT));
 	}
 
 	/**
@@ -164,15 +202,15 @@ public class AnnualReportGUI {
 	 * @param farmID is the ID of the farm to generate the report for
 	 * @return VBox with the body of the farmReport Screen
 	 */
-	private VBox annualReportBody(Database db, int year) {
+	private VBox rangeReportBody(Database db, Date start, Date end) {
 		// create VBox to return as the body of the farm Report
-		VBox frBody = new VBox();
+		VBox rrBody = new VBox();
 
 		// get farm info from database
 		ArrayList<Farm> allFarms = new ArrayList<Farm>(db.allFarms);
 
 		// get purchases weight from this year
-		HashSet<Purchase> purchases = db.getPurchasesInRange(new Date(year, 1, 0), new Date(year, 12, 32));
+		HashSet<Purchase> purchases = db.getPurchasesInRange(start, end);
 
 		// get total milk weight this year
 		int weight = 0;
@@ -196,7 +234,7 @@ public class AnnualReportGUI {
 		pByFarmLabel.setAlignment(Pos.CENTER);
 		pByFarmLabel.setFont(new Font(FONT, 15));
 
-		TableView pByFarmTable = generatePByYearTable(weight, allFarms, year);
+		TableView pByFarmTable = generatePByRangeTable(weight, allFarms, start, end);
 
 		pByFarmBox.getChildren().addAll(pByFarmLabel, pByFarmTable);
 
@@ -204,16 +242,16 @@ public class AnnualReportGUI {
 		purchasesBox.getChildren().addAll(pByFarmBox);
 
 		// add Hboxes to main Vbox
-		frBody.getChildren().addAll(totalMilkBox, purchasesBox);
+		rrBody.getChildren().addAll(totalMilkBox, purchasesBox);
 
-		return frBody;
+		return rrBody;
 	}
 
-	private TableView generatePByYearTable(int weight, ArrayList<Farm> allFarms, int year) {
+	private TableView generatePByRangeTable(int weight, ArrayList<Farm> allFarms, Date start, Date end) {
 		ArrayList<farmPercent> list = new ArrayList<farmPercent>();
 
 		for (Farm f : allFarms) {
-			list.add(new farmPercent(f, weight, year));
+			list.add(new farmPercent(f, weight, start, end));
 		}
 
 		ObservableList<farmPercent> data = FXCollections.observableList(list);
