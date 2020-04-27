@@ -58,6 +58,7 @@ public class AnnualReportGUI {
 
 		// create a label for this section of the home screen
 		Label annualReportTitle = new Label("Generate Annual Report");
+		annualReportTitle.setFont(new Font(FONT, 17));
 
 		// create an HBox for the input required to generate the annual report
 		HBox yearInput = new HBox();

@@ -112,6 +112,7 @@ public class Farm {
 	 */
 	public void addPurchase(Date date, int weight) {
 		Purchase toAdd = new Purchase(date, this.farmID, weight);
+		System.out.print("Adding ");
 		toAdd.print();
 		purchases.add(toAdd);
 		monthPercent = generateMonthPercent();

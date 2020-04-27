@@ -64,7 +64,7 @@ public class Purchase {
 	 * Prints purchase to console
 	 */
 	public void print() {
-		System.out.println("Purchase by farm: " + farmID + " of " + weight + " pounds on " + date.toString());
+		System.out.println("Purchase by farm " + farmID + " of " + weight + " pounds on " + date.toString());
 	}
 
 }

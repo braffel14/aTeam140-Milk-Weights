@@ -61,6 +61,7 @@ public class DateRangeReportGUI {
 		// create a label for this section of the home screen
 		Label rangeReportTitle = new Label("Generate Range Report");
 		rangeReportTitle.setAlignment(Pos.CENTER);
+		rangeReportTitle.setFont(new Font(FONT, 17));
 
 		// create an HBox for the input required to generate the annual report
 		HBox dateInput = new HBox();
@@ -69,30 +70,31 @@ public class DateRangeReportGUI {
 		VBox startBox = new VBox();
 		Label startLabel = new Label("Start date:");
 		DatePicker startDate = new DatePicker();
+		startDate.setPromptText("Start Date");
 		startDate.setMaxWidth(110);
 		startBox.getChildren().addAll(startLabel, startDate);
 
 		VBox endBox = new VBox();
 		Label endLabel = new Label("End date:");
 		DatePicker endDate = new DatePicker();
+		endDate.setPromptText("End Date");
 		endDate.setMaxWidth(110);
 		endBox.getChildren().addAll(endLabel, endDate);
 
-		VBox dateButtonBox = new VBox();
-		Label blankDateButtonLabel = new Label("");
 		// create a button to trigger generating the report
 		Button rangeReportButton = new Button("Generate Date Range Report");
 
-		dateButtonBox.getChildren().addAll(blankDateButtonLabel, rangeReportButton);
 
 		HBox datePickers = new HBox();
-		datePickers.getChildren().addAll(startBox, endBox, dateButtonBox);
+		datePickers.getChildren().addAll(startBox, endBox);
 		rangeReportButton.setOnAction(new GetRangeHandler(datePickers));
+		
+		
 		// add UI elemetns to HBOX for generating a Farm Report
-		dateInput.getChildren().addAll(datePickers, rangeReportButton);
+		dateInput.getChildren().addAll(datePickers);
 
 		// add UI elements to VBox for farm report section of the home screen
-		rangeReportvBox.getChildren().addAll(rangeReportTitle, dateInput);
+		rangeReportvBox.getChildren().addAll(rangeReportTitle, dateInput, rangeReportButton);
 
 		return rangeReportvBox;
 

@@ -42,7 +42,7 @@ public class Main extends Application {
 
 	private static final int WINDOW_WIDTH = 700;
 	private static final int WINDOW_HEIGHT = 500;
-	private static final String APP_TITLE = "Hello World!";
+	private static final String APP_TITLE = "MPRS";
 	private static final String FONT = "Arial";
 
 	Database db = new Database();
@@ -56,11 +56,13 @@ public class Main extends Application {
 		BorderPane root = new BorderPane();
 
 		// Add the vertical box to the center of the root pane
-		HBox topLabelBox = new HBox();
+		VBox topLabelBox = new VBox();
 		topLabelBox.setAlignment(Pos.CENTER);
-		Label topLabel = new Label("Cheese Factory");
+		Label topLabel = new Label("Chalet Cheese Cooperative");
 		topLabel.setFont(new Font(FONT, 36));
-		topLabelBox.getChildren().addAll(topLabel);
+		Label secondLabel = new Label("Milk Purchase Reporting System");
+		secondLabel.setFont(new Font(FONT, 28));
+		topLabelBox.getChildren().addAll(topLabel, secondLabel);
 
 		// Create a VBox to Hold UI elements for generating reports
 		VBox allReportsVBox = new VBox();
@@ -98,13 +100,9 @@ public class Main extends Application {
 		FileChooser importFileChooser = new FileChooser();
 		importFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
 
-		// create label to fill with text if issue is found while parsing data
-		Label parseErrorLabel = new Label();
-		parseErrorLabel.setFont(new Font(FONT, 15));
-
 		// create a button to import data files
 		Button importFileButton = new Button("Import Data From CSV");
-		importFileButton.setOnAction(new ParseFileHandler(db, importFileChooser, primaryStage, parseErrorLabel));
+		importFileButton.setOnAction(new ParseFileHandler(db, importFileChooser, primaryStage));
 
 		// save UI elements for importing data to their HBOX
 		importDataHBox.getChildren().addAll(importFileButton);
@@ -129,7 +127,7 @@ public class Main extends Application {
 		exportDataHBox.getChildren().addAll(exportDataButton);
 
 		// save HBoxes for importing and exporting data to their parent HBoxes
-		dataIOHBox.getChildren().addAll(importDataHBox, exportDataHBox, parseErrorLabel);
+		dataIOHBox.getChildren().addAll(importDataHBox, exportDataHBox);
 
 		root.setTop(topLabelBox);
 		root.setCenter(allReportsVBox);
@@ -154,34 +152,36 @@ public class Main extends Application {
 		Database db;
 		FileChooser fc;
 		Stage primaryStage;
-		Label parseErrorLabel;
 
 		// constructor
-		ParseFileHandler(Database db, FileChooser fc, Stage primaryStage, Label parseErrorLabel) {
+		ParseFileHandler(Database db, FileChooser fc, Stage primaryStage) {
 			this.db = db;
 			this.fc = fc;
 			this.primaryStage = primaryStage;
-			this.parseErrorLabel = parseErrorLabel;
 		}
 
 		@Override
 		public void handle(ActionEvent arg0) {
 			try {
+				// get list of files to parse
 				List<File> fileList = fc.showOpenMultipleDialog(primaryStage);
+				// parse each file through the database
 				if (fileList != null) {
 					for (File file : fileList) {
 						db.importData(file);
 					}
 				}
-				parseErrorLabel.setText("     Import Successful");
+				Alert noFarmAlert = new Alert(Alert.AlertType.INFORMATION);
+				noFarmAlert.setHeaderText("Import Successful!");
+				noFarmAlert.setContentText("Successfully imported " + db.getAllPurchases().size() + " purchases from " + fileList.size() + " file(s)");
+				noFarmAlert.show();
 			} catch (NumberFormatException nfe) {
-				parseErrorLabel.setText("");
+				// catch NumebrFormatException if
 				Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
 				noFarmAlert.setHeaderText("Improper CSV Format");
 				noFarmAlert.setContentText("Problem reading data. Check CSV file for proper format and try again.");
 				noFarmAlert.show();
 			} catch (MissingDataException e) {
-				parseErrorLabel.setText("");
 				Alert noFarmAlert = new Alert(Alert.AlertType.ERROR);
 				noFarmAlert.setHeaderText("Incomplete Data");
 				noFarmAlert.setContentText("Purchase data in chosen CSV file is incomplete. Check file and try again.");

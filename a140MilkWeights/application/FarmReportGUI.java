@@ -60,6 +60,7 @@ public class FarmReportGUI {
 
 		// create a label for this section of the home screen
 		Label farmReportTitle = new Label("Generate Farm Report");
+		farmReportTitle.setFont(new Font(FONT, 17));
 
 		// create an HBox for the input required to generate the farm report
 		HBox farmIDInput = new HBox();
