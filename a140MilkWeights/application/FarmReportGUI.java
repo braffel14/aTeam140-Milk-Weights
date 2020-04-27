@@ -1,7 +1,22 @@
+/**
+ * FarmReportGUI created by braffel on MacBook Pro in a140MilkWeights
+ *
+ * Author:      Benjamin Raffel (braffel@wisc.edu)
+ * Date:        4/27/2020
+ * 
+ * Course:      CS400
+ * Semester:    Spring 2020
+ * Lecture:     001
+ *
+ * List Collaboratprs: n/a
+ *
+ * Other Credits: n/a
+ *
+ * Known Bugs: n/a
+ */
 package application;
 
 import java.util.ArrayList;
-
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,16 +40,28 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * Generates the GUI elements and funcitons needed to create a farm report
+ * 
+ * @author benjaminraffel
+ *
+ */
 public class FarmReportGUI {
-	
-	
-	
+
 	private final Database db;
 	private final String FONT;
 	private final double WINDOW_WIDTH;
 	private final double WINDOW_HEIGHT;
 	private Stage primaryStage;
-	
+
+	/**
+	 * Constructor to generate a FarmReportGUI for a given farm
+	 * 
+	 * @param db            - database to get data from
+	 * @param FONT          - font to use for labels
+	 * @param WINDOW_WIDTH
+	 * @param WINDOW_HEIGHT
+	 */
 	public FarmReportGUI(Database db, String FONT, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
 		this.db = db;
 		this.FONT = FONT;
@@ -44,15 +71,15 @@ public class FarmReportGUI {
 
 	/**
 	 * Create a VBox with the UI elements required for the user to generate a report
-	 * for a specific farm to be returned to the main UI 
+	 * for a specific farm to be returned to the main UI
 	 * 
 	 * @param primaryStage
 	 * @return VBOX with the UI elements required for the user to generate a report
 	 *         for a specific farm
 	 */
 	public VBox getFarmReportVBox(Stage primaryStage) {
-		
-		//save primary stage to instance variable
+
+		// save primary stage to instance variable
 		this.primaryStage = primaryStage;
 
 		// Create a VBox for the farm report section of the home screen

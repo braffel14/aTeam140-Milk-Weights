@@ -1,3 +1,19 @@
+/**
+ * Date created by braffel on MacBook Pro in a140MilkWeights
+ *
+ * Author:      Benjamin Raffel (braffel@wisc.edu)
+ * Date:        4/27/2020
+ * 
+ * Course:      CS400
+ * Semester:    Spring 2020
+ * Lecture:     001
+ *
+ * List Collaboratprs: n/a
+ *
+ * Other Credits: n/a
+ *
+ * Known Bugs: n/a
+ */
 package application;
 
 import java.time.LocalDate;

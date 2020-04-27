@@ -1,3 +1,19 @@
+/**
+ * AnnualReportGUI created by braffel on MacBook Pro in a140MilkWeights
+ *
+ * Author:      Benjamin Raffel (braffel@wisc.edu)
+ * Date:        4/27/2000
+ * 
+ * Course:      CS400
+ * Semester:    Spring 2020
+ * Lecture:     001
+ *
+ * List Collaboratprs: n/a
+ *
+ * Other Credits: n/a
+ *
+ * Known Bugs: n/a
+ */
 package application;
 
 import java.util.ArrayList;
@@ -26,6 +42,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * Generates the GUI elements for creating an annual report
+ * 
+ * @author benjaminraffel
+ *
+ */
 public class AnnualReportGUI {
 	private final Database db;
 	private final String FONT;

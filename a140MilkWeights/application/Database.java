@@ -1,3 +1,19 @@
+/**
+ * Database created by braffel on MacBook Pro in a140MilkWeights
+ *
+ * Author:      Benjamin Raffel (braffel@wisc.edu)
+ * Date:        4/27/2020
+ * 
+ * Course:      CS400
+ * Semester:    Spring 2020
+ * Lecture:     001
+ *
+ * List Collaboratprs: n/a
+ *
+ * Other Credits: n/a
+ *
+ * Known Bugs: n/a
+ */
 package application;
 
 import java.io.BufferedReader;
@@ -12,6 +28,13 @@ import java.util.HashSet;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+/**
+ * Creates a Database object to run the backend calculations and storage for the
+ * Milk Weight Reporting System
+ * 
+ * @author benjaminraffel
+ *
+ */
 public class Database {
 
 	public HashSet<Farm> allFarms;

@@ -1,3 +1,19 @@
+/**
+ * Farm created by braffel on MacBook Pro in a140MilkWeights
+ *
+ * Author:      Benjamin Raffel (braffel@wisc.edu)
+ * Date:        4/27/2020
+ * 
+ * Course:      CS400
+ * Semester:    Spring 2020
+ * Lecture:     001
+ *
+ * List Collaboratprs: n/a
+ *
+ * Other Credits: n/a
+ *
+ * Known Bugs: n/a
+ */
 package application;
 
 import java.text.DecimalFormat;
@@ -30,9 +46,16 @@ public class Farm {
 
 	}
 
+	/**
+	 * Generates an arraylist with a percentage of milk sold by this farm farm
+	 * compared to all farms in the report being generated
+	 * 
+	 * @return ArrayList of length 12 with a percentage value for each month of the
+	 *         year
+	 */
 	private ArrayList<String> generateMonthPercent() {
 		ArrayList<String> monthPercent = new ArrayList<String>();
-		
+
 		monthWeight = new int[12];
 
 		// fill monthWeight
@@ -42,7 +65,7 @@ public class Farm {
 
 		for (int i = 0; i < 12; i++) {
 			if (getFarmWeight() > 0) {
-				double percent = ((double) monthWeight[i] / (double) getFarmWeight())*100;
+				double percent = ((double) monthWeight[i] / (double) getFarmWeight()) * 100;
 				DecimalFormat df = new DecimalFormat("##.###");
 				monthPercent.add("" + df.format(percent) + "%");
 			} else {
@@ -149,6 +172,11 @@ public class Farm {
 		return totalWeight;
 	}
 
+	/**
+	 * Returns generated ArrayList for percentage of milk sold each month
+	 * 
+	 * @return generated ArrayList for percentage of milk sold each month
+	 */
 	public ArrayList<String> getMonthPercentages() {
 		monthPercent = generateMonthPercent();
 		return monthPercent;

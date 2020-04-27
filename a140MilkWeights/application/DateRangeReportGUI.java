@@ -1,3 +1,19 @@
+/**
+ * DateRangeReportGUI created by braffel on MacBook Pro in a140MilkWeights
+ *
+ * Author:      Benjamin Raffel (braffel@wisc.edu)
+ * Date:        4/27/2020
+ * 
+ * Course:      CS400
+ * Semester:    Spring 2020
+ * Lecture:     001
+ *
+ * List Collaboratprs: n/a
+ *
+ * Other Credits: n/a
+ *
+ * Known Bugs: n/a
+ */
 package application;
 
 import java.util.ArrayList;
@@ -27,6 +43,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * Class to create the GUI elements for creating a date range report
+ * 
+ * @author benjaminraffel
+ *
+ */
 public class DateRangeReportGUI {
 	private final Database db;
 	private final String FONT;
@@ -84,12 +106,10 @@ public class DateRangeReportGUI {
 		// create a button to trigger generating the report
 		Button rangeReportButton = new Button("Generate Date Range Report");
 
-
 		HBox datePickers = new HBox();
 		datePickers.getChildren().addAll(startBox, endBox);
 		rangeReportButton.setOnAction(new GetRangeHandler(datePickers));
-		
-		
+
 		// add UI elemetns to HBOX for generating a Farm Report
 		dateInput.getChildren().addAll(datePickers);
 
@@ -249,6 +269,16 @@ public class DateRangeReportGUI {
 		return rrBody;
 	}
 
+	/**
+	 * Creates a TableView to display the percentages for each farm in this date
+	 * range
+	 * 
+	 * @param weight   - total weight of milk sold in date range
+	 * @param allFarms - all farms that sold milk in this date range
+	 * @param start    - begining of date range
+	 * @param end      - end of date range
+	 * @return TableView object that displays the percentages and has all data
+	 */
 	private TableView generatePByRangeTable(int weight, ArrayList<Farm> allFarms, Date start, Date end) {
 		ArrayList<farmPercent> list = new ArrayList<farmPercent>();
 
